@@ -159,7 +159,7 @@ public class ChampionFrequency {
 		JsonArray array = rootobj.getAsJsonArray("matches");
 		for(int i=0;i<array.size();i++) {
 			int championID=((JsonObject) array.get(i)).get("champion").getAsInt();
-			freqMap.put(champIDMap.get(championID), freqMap.getOrDefault(championID,0)+1);
+			freqMap.put(champIDMap.get(championID), freqMap.getOrDefault(champIDMap.get(championID),0)+1);
 		}
 		return freqMap;
 	}
