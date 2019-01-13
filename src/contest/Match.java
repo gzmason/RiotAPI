@@ -16,6 +16,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+
+class kdaWinLoseTime{
+	public double kda;
+	public boolean win;
+	public long time;
+	public kdaWinLoseTime(double kda,boolean win,long time) {
+		this.kda=kda;
+		this.win=win;
+		this.time=time;
+	}
+}
 public class Match {
 	static String matchID;
 	static String api_key;
@@ -25,7 +36,7 @@ public class Match {
 		this.summonerID=summonerID;
 		this.matchID=matchID;
 	}
-	public double getKDA() {
+	public kdaWinLoseTime getGameStats() {
 		
 		String sURL = "https://na1.api.riotgames.com/lol/match/v4/matches/"+matchID+"?api_key="+api_key; //just a string
 		// Connect to the URL using java's native library
@@ -60,6 +71,7 @@ public class Match {
 		} 
 		//Convert the input stream to a json element
 		JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object. 
+		long time=Long.parseLong(rootobj.get("gameCreation").getAsString());
 		JsonArray participantList=rootobj.get("participantIdentities").getAsJsonArray();
 		String participantID="-1";
 		for(int i=0;i<participantList.size();i++) {
@@ -72,6 +84,7 @@ public class Match {
 		int kill=-1;
 		int assist=-1;
 		int death=-1;
+		String winOrLose="dk";
 		JsonArray statsList=rootobj.get("participants").getAsJsonArray();
 		for(int i=0;i<statsList.size();i++) {
 			if(((JsonObject) statsList.get(i)).get("stats").getAsJsonObject().get("participantId").getAsString().equals(participantID)) {
@@ -79,10 +92,21 @@ public class Match {
 				kill=Integer.parseInt(thisPlayer.get("kills").getAsString());
 				assist=Integer.parseInt(thisPlayer.get("assists").getAsString());
 				death=Integer.parseInt(thisPlayer.get("deaths").getAsString());
+				winOrLose=thisPlayer.get("win").getAsString();
 			}
 		}
 		death=death+1;
-		return (kill+assist)/(double)death;
+		double kda=(kill+assist)/(double)death;
+		
+		boolean win;
+		if(winOrLose.equals("true")) {
+			win=true;
+		}
+		else {
+			win=false;
+		}
+		
+		return new kdaWinLoseTime(kda,win,time);
 	}
 
 }

@@ -35,6 +35,7 @@ public class ChampionFrequency {
 	static Map<Integer,String> champIDMap;
 	static Map<String,Double> kdaMap=new HashMap<String,Double>();
 	static Map<String,Integer> freqMap=new HashMap<String,Integer>();
+	static Map<String,Long> lastPlay=new HashMap<String,Long>();
 	
 	public static void SummonerIDbyName () {
 		System.out.println("Please enter your summoner name: ");
@@ -159,14 +160,27 @@ public class ChampionFrequency {
 		JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object. 
 		List<String> list = new ArrayList<String>();
 		JsonArray array = rootobj.getAsJsonArray("matches");
-		for(int i=0;i<50;i++) {
+		for(int i=0;i<98;i++) {
 			int championID=((JsonObject) array.get(i)).get("champion").getAsInt();
 			String championName=champIDMap.get(championID);
 			String matchID=((JsonObject) array.get(i)).get("gameId").getAsString();
 			Match m=new Match(matchID,summonerID,api_key);
-			double kda=m.getKDA();
-			kdaMap.put(championName, kdaMap.getOrDefault(championName, 0.0)+kda);
+			kdaWinLoseTime wlt=m.getGameStats();
+			double winBonus=0;
+			if(wlt.win) {
+				winBonus=1.5;
+			}
+			kdaMap.put(championName, kdaMap.getOrDefault(championName, 0.0)+wlt.kda+winBonus);
 			freqMap.put(championName, freqMap.getOrDefault(championName,0)+1);
+			
+			if(!lastPlay.containsKey(championName)) {
+				lastPlay.put(championName, wlt.time);
+			}
+			else {
+				if(lastPlay.get(championName)<wlt.time) {
+					lastPlay.put(championName, wlt.time);
+				}
+			}
 		}
 		Map<String,Double> res=new HashMap<String,Double>();
 		for(String champName:kdaMap.keySet()) {
@@ -178,12 +192,11 @@ public class ChampionFrequency {
 		champIDMap=getChampName();
 		
 		SummonerIDbyName();
-		Map<String,Double> result=getChampKDA();
-		for(Map.Entry<String, Double> entry:result.entrySet()) {
-			System.out.println("Champion: "+entry.getKey()+"   Average KDA: "+entry.getValue());
-		}
-		
-		
+		Map<String,Double> kdaResult=getChampKDA();
+		for(Map.Entry<String, Double> entry:kdaResult.entrySet()) {
+			String championName=entry.getKey();
+			System.out.println("Champion: "+championName+"   Times: "+freqMap.get(championName)+"   Average KDA: "+entry.getValue()+"   Last Played: "+lastPlay.get(championName));
+		}	
 	}
 	
 }
