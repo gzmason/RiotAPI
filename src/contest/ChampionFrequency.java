@@ -1,6 +1,7 @@
 package contest;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -189,13 +190,14 @@ public class ChampionFrequency {
 		return res;
 	}
 	public static void main(String[] args) {
+		long currentTime=System.currentTimeMillis();
 		champIDMap=getChampName();
-		
 		SummonerIDbyName();
 		Map<String,Double> kdaResult=getChampKDA();
 		for(Map.Entry<String, Double> entry:kdaResult.entrySet()) {
 			String championName=entry.getKey();
-			System.out.println("Champion: "+championName+"   Times: "+freqMap.get(championName)+"   Average KDA: "+entry.getValue()+"   Last Played: "+lastPlay.get(championName));
+			long timeDifference=currentTime-lastPlay.get(championName).longValue();
+			System.out.println("Champion: "+championName+"   Times: "+freqMap.get(championName)+"   Average KDA: "+entry.getValue()+"   Since Last Played: "+timeDifference);
 		}	
 	}
 	
