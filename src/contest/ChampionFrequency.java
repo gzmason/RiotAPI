@@ -33,6 +33,8 @@ public class ChampionFrequency {
 	static Gson gson = new GsonBuilder().enableComplexMapKeySerialization()
 			.create();
 	static Map<Integer,String> champIDMap;
+	static Map<String,Double> kdaMap=new HashMap<String,Double>();
+	static Map<String,Integer> freqMap=new HashMap<String,Integer>();
 	
 	public static void SummonerIDbyName () {
 		System.out.println("Please enter your summoner name: ");
@@ -120,8 +122,8 @@ public class ChampionFrequency {
 		
 		return res;
 	}
-	public static Map<String,Integer> getChampFreq() {
-		Map<String,Integer> freqMap=new HashMap<>();
+	
+	public static Map<String,Double> getChampKDA() {
 		String sURL = "https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/"+accountID+"?api_key="+api_key; //just a string
 		// Connect to the URL using java's native library
 		URL url = null;
@@ -157,20 +159,30 @@ public class ChampionFrequency {
 		JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object. 
 		List<String> list = new ArrayList<String>();
 		JsonArray array = rootobj.getAsJsonArray("matches");
-		for(int i=0;i<array.size();i++) {
+		for(int i=0;i<50;i++) {
 			int championID=((JsonObject) array.get(i)).get("champion").getAsInt();
-			freqMap.put(champIDMap.get(championID), freqMap.getOrDefault(champIDMap.get(championID),0)+1);
+			String championName=champIDMap.get(championID);
+			String matchID=((JsonObject) array.get(i)).get("gameId").getAsString();
+			Match m=new Match(matchID,summonerID,api_key);
+			double kda=m.getKDA();
+			kdaMap.put(championName, kdaMap.getOrDefault(championName, 0.0)+kda);
+			freqMap.put(championName, freqMap.getOrDefault(championName,0)+1);
 		}
-		return freqMap;
+		Map<String,Double> res=new HashMap<String,Double>();
+		for(String champName:kdaMap.keySet()) {
+			res.put(champName, kdaMap.get(champName)/freqMap.get(champName));
+		}
+		return res;
 	}
 	public static void main(String[] args) {
 		champIDMap=getChampName();
 		
 		SummonerIDbyName();
-		Map<String,Integer> freqMap=getChampFreq();
-		for(Map.Entry<String, Integer> entry:freqMap.entrySet()) {
-			System.out.println("Champion: "+entry.getKey()+"   Times: "+entry.getValue());
+		Map<String,Double> result=getChampKDA();
+		for(Map.Entry<String, Double> entry:result.entrySet()) {
+			System.out.println("Champion: "+entry.getKey()+"   Average KDA: "+entry.getValue());
 		}
+		
 		
 	}
 	
