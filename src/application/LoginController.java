@@ -63,7 +63,7 @@ public class LoginController implements Initializable {
 							@Override
 							protected Void call() throws Exception {
 								updateMessage("Logging in...");
-								ChampionFrequency.champIDMap = ChampionFrequency.getChampName();
+								ChampionFrequency.getChampName();
 								ChampionFrequency.SummonerIDbyName(nameTextField.getText());
 								Map<String, Double> kdaResult = ChampionFrequency.getChampKDA();
 

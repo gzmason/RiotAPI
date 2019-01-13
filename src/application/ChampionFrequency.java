@@ -38,10 +38,10 @@ public class ChampionFrequency {
 	static Map<String,Integer> freqMap=new HashMap<String,Integer>();
 	static Map<String,Long> lastPlay=new HashMap<String,Long>();
 	
-	public static void SummonerIDbyName () {
-		System.out.println("Please enter your summoner name: ");
-		Scanner scan=new Scanner(System.in);
-		String summonerName=scan.nextLine();
+	public static void SummonerIDbyName (String name) {
+		//System.out.println("Please enter your summoner name: ");
+		//Scanner scan=new Scanner(System.in);
+		String summonerName=name;
 		String sURL = "https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+summonerName+"?api_key="+api_key; //just a string
 		// Connect to the URL using java's native library
 		URL url = null;
@@ -188,7 +188,7 @@ public class ChampionFrequency {
 		}
 		return res;
 	}
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		long currentTime=System.currentTimeMillis();
 		getChampName();
 		SummonerIDbyName();
@@ -198,6 +198,6 @@ public class ChampionFrequency {
 			long timeDifference=currentTime-lastPlay.get(championName).longValue();
 			System.out.println("Champion: "+championName+"   Times: "+freqMap.get(championName)+"   Average KDA: "+entry.getValue()+"   Since Last Played: "+timeDifference);
 		}	
-	}
+	}*/
 	
 }
