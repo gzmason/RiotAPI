@@ -1,6 +1,7 @@
 package application;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -66,15 +67,15 @@ public class LoginController implements Initializable {
 								ChampionFrequency.getChampName();
 								ChampionFrequency.SummonerIDbyName(nameTextField.getText());
 								Map<String, Double> kdaResult = ChampionFrequency.getChampKDA();
-
+								long currentTime=System.currentTimeMillis();
 								for (Map.Entry<String, Double> entry : kdaResult.entrySet()) {
 									String championName = entry.getKey();
 									System.out.println("Champion: " + championName + "   Times: "
 											+ ChampionFrequency.freqMap.get(championName) + "   Average KDA: "
 											+ entry.getValue() + "   Last Played: "
-											+ ChampionFrequency.lastPlay.get(championName));
+											+ (currentTime-ChampionFrequency.lastPlay.get(championName)));
 								}
-								
+								ChampionFrequency.recommendNew();
 								return null;
 							}
 						};
