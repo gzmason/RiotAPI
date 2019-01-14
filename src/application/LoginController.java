@@ -119,9 +119,6 @@ public class LoginController implements Initializable {
 			loginButton.setDisable(false);
 		}
 		
-		
-		
-
 	}
 
 	public void anotherChamp(ActionEvent event) {
