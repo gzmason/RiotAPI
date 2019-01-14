@@ -259,8 +259,14 @@ public class ChampionFrequency {
 		JsonArray array = rootobj.getAsJsonArray("matches");
 		
 		for(int i=0;i<array.size()-2;i++) { //for each match
+			System.out.print(i);
 			int championID=((JsonObject) array.get(i)).get("champion").getAsInt();
+			//System.out.print(" championID: "+championID);
 			String championName=champIDMap.get(championID);
+			//System.out.println(" championName: "+championName);
+			if(championName==null) {
+				continue;
+			}
 			String matchID=((JsonObject) array.get(i)).get("gameId").getAsString();
 			Match m=new Match(matchID,summonerID,api_key);
 			kdaWinLoseTime wlt=m.getGameStats();
@@ -285,6 +291,7 @@ public class ChampionFrequency {
 			for(int j=0;j<10;j++) {
 				playerFeature.set(j, playerFeature.get(j)+championFeature.get(j));
 			}
+	
 			//update playedChampion
 			playedChampion.add(championName);
 		}
