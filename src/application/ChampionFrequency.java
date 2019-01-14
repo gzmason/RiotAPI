@@ -1,6 +1,7 @@
 package application;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -37,10 +38,10 @@ public class ChampionFrequency {
 	static Map<String,Integer> freqMap=new HashMap<String,Integer>();
 	static Map<String,Long> lastPlay=new HashMap<String,Long>();
 	
-	public static void SummonerIDbyName (String summonerName) {
+	public static void SummonerIDbyName (String name) {
 		//System.out.println("Please enter your summoner name: ");
 		//Scanner scan=new Scanner(System.in);
-		//String summonerName=scan.nextLine();
+		String summonerName=name;
 		String sURL = "https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+summonerName+"?api_key="+api_key; //just a string
 		// Connect to the URL using java's native library
 		URL url = null;
@@ -79,7 +80,7 @@ public class ChampionFrequency {
 		accountID=rootobj.get("accountId").getAsString(); 
 		System.out.println("Your encrypted accountID is "+accountID);
 	}
-	public static Map<Integer,String> getChampName(){
+	public static void getChampName(){
 		Map<Integer,String> res=new HashMap<>();
 		String sURL = "http://ddragon.leagueoflegends.com/cdn/6.24.1/data/en_US/champion.json";
 		// Connect to the URL using java's native library
@@ -120,8 +121,7 @@ public class ChampionFrequency {
 			Integer id=Integer.parseInt(idQuotation.substring(1, idQuotation.length()-1));
 			res.put(id, champName);
 		}
-		
-		return res;
+		champIDMap=res;
 	}
 	
 	public static Map<String,Double> getChampKDA() {
@@ -188,16 +188,16 @@ public class ChampionFrequency {
 		}
 		return res;
 	}
-	public static void main(String[] args) {
-		
-//		champIDMap=getChampName();
-//		
-//		//SummonerIDbyName();
-//		Map<String,Double> kdaResult=getChampKDA();
-//		for(Map.Entry<String, Double> entry:kdaResult.entrySet()) {
-//			String championName=entry.getKey();
-//			System.out.println("Champion: "+championName+"   Times: "+freqMap.get(championName)+"   Average KDA: "+entry.getValue()+"   Last Played: "+lastPlay.get(championName));
-//		}	
-	}
+	/*public static void main(String[] args) {
+		long currentTime=System.currentTimeMillis();
+		getChampName();
+		SummonerIDbyName();
+		Map<String,Double> kdaResult=getChampKDA();
+		for(Map.Entry<String, Double> entry:kdaResult.entrySet()) {
+			String championName=entry.getKey();
+			long timeDifference=currentTime-lastPlay.get(championName).longValue();
+			System.out.println("Champion: "+championName+"   Times: "+freqMap.get(championName)+"   Average KDA: "+entry.getValue()+"   Since Last Played: "+timeDifference);
+		}	
+	}*/
 	
 }
