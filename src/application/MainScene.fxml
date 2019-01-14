@@ -7,14 +7,18 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane blendMode="DARKEN" disable="false" focusTraversable="false" pickOnBounds="false" prefHeight="254.0" prefWidth="171.5" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.LoginController">
+<AnchorPane blendMode="DARKEN" disable="false" focusTraversable="false" pickOnBounds="false" prefHeight="254.0" prefWidth="324.5" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.LoginController">
   <children>
-    <Button fx:id="loginButton" layoutX="10.0" layoutY="64.0" mnemonicParsing="false" onAction="#login" prefHeight="23.0" prefWidth="150.0" text="Login" />
-    <TextField fx:id="nameTextField" layoutX="11.0" layoutY="32.0" prefWidth="150.0" />
-    <Label layoutX="34.0" layoutY="10.0" text="Summoner Name" />
-    <Label layoutX="27.0" layoutY="113.0" prefWidth="120.0" text="Recommend Champ" />
+    <Button fx:id="loginButton" layoutX="104.0" layoutY="64.0" mnemonicParsing="false" onAction="#login" prefHeight="23.0" prefWidth="102.0" text="Login" />
+    <TextField fx:id="nameTextField" layoutX="104.0" layoutY="32.0" prefWidth="102.0" />
+    <Label layoutX="105.0" layoutY="10.0" text="Summoner Name" />
+    <Label layoutX="15.0" layoutY="113.0" prefWidth="146.0" text="Recommend Old Champ" />
     <TextField fx:id="recomTextField" disable="true" layoutX="14.0" layoutY="133.0" prefWidth="146.0" />
     <Button fx:id="anotherButton" disable="true" layoutX="14.0" layoutY="218.0" mnemonicParsing="false" onAction="#anotherChamp" prefHeight="22.0" prefWidth="146.0" text="Pick" />
-    <ImageView fx:id="champIcon" fitHeight="47.25" fitWidth="63.0" layoutX="59.0" layoutY="162.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView id="oldchampIcon" fx:id="champIcon" fitHeight="47.25" fitWidth="63.0" layoutX="59.0" layoutY="162.0" pickOnBounds="true" preserveRatio="true" />
+    <Label layoutX="166.0" layoutY="114.0" prefHeight="16.0" prefWidth="148.5" text="Recommend new Champ" />
+    <TextField fx:id="newChamp" disable="true" layoutX="165.0" layoutY="133.0" prefHeight="22.0" prefWidth="146.0" />
+    <Button fx:id="newChampBtn" disable="true" layoutX="165.0" layoutY="217.0" mnemonicParsing="false" onAction="#anotherNew" prefHeight="23.0" prefWidth="146.0" text="Pick" />
+    <ImageView id="newchampIcon" fitHeight="47.25" fitWidth="63.000003573619736" layoutX="207.0" layoutY="162.0" pickOnBounds="true" preserveRatio="true" />
   </children>
 </AnchorPane>

@@ -8,11 +8,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-<<<<<<< HEAD
+
 import java.util.Comparator;
-=======
+
 import java.util.Arrays;
->>>>>>> 936ee8a86512977c5c21fdd747c560fda358da84
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -37,11 +36,9 @@ import com.google.gson.GsonBuilder;
 
 
 public class ChampionFrequency {
-<<<<<<< HEAD
+
 	final static String api_key="RGAPI-4f9c7ce3-4030-4e79-b51a-8f7929578f48";
-=======
-	final static String api_key="RGAPI-635bcc8d-7026-496f-a95a-f428583efdb3";
->>>>>>> 936ee8a86512977c5c21fdd747c560fda358da84
+
 	static String summonerID=null;
 	static String accountID=null;
 	static Gson gson = new GsonBuilder().enableComplexMapKeySerialization()
@@ -300,7 +297,7 @@ public class ChampionFrequency {
 		}
 		return res;
 	}
-<<<<<<< HEAD
+
 
 	public static Map<String,Double> usedChampFinalRank(){
 		Map<String,Double> rank = getChampKDA();
@@ -330,7 +327,7 @@ public class ChampionFrequency {
 		return finalSortedRank;
 	}
 	
-=======
+
 	
 	public static ArrayList<String> recommendNew(){
 		ArrayList<String> res=new ArrayList<String>();
@@ -368,8 +365,8 @@ public class ChampionFrequency {
 	}
 	
 	public static void main(String[] args) {
-		long currentTime=System.currentTimeMillis();
-		getChampName();
+//		long currentTime=System.currentTimeMillis();
+//		getChampName();
 		//SummonerIDbyName();
 		//Map<String,Double> kdaResult=getChampKDA();
 		/*for(Map.Entry<String, ArrayList<Integer>> entry:champFeatureMap.entrySet()) {
@@ -378,6 +375,6 @@ public class ChampionFrequency {
 			System.out.println("Champion: "+championName+"   "+entry.getValue());
 		}*/
 	}
->>>>>>> 936ee8a86512977c5c21fdd747c560fda358da84
+
 	
 }
