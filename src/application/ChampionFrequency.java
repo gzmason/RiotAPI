@@ -8,8 +8,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.Comparator;
+=======
+import java.util.Arrays;
+>>>>>>> 936ee8a86512977c5c21fdd747c560fda358da84
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +37,11 @@ import com.google.gson.GsonBuilder;
 
 
 public class ChampionFrequency {
+<<<<<<< HEAD
 	final static String api_key="RGAPI-4f9c7ce3-4030-4e79-b51a-8f7929578f48";
+=======
+	final static String api_key="RGAPI-635bcc8d-7026-496f-a95a-f428583efdb3";
+>>>>>>> 936ee8a86512977c5c21fdd747c560fda358da84
 	static String summonerID=null;
 	static String accountID=null;
 	static Gson gson = new GsonBuilder().enableComplexMapKeySerialization()
@@ -41,6 +50,9 @@ public class ChampionFrequency {
 	static Map<String,Double> kdaMap=new HashMap<String,Double>();
 	static Map<String,Integer> freqMap=new HashMap<String,Integer>();
 	static Map<String,Long> lastPlay=new HashMap<String,Long>();
+	static Map<String,ArrayList<Integer>> champFeatureMap=new HashMap<String,ArrayList<Integer>>();
+	static ArrayList<Double> playerFeature=new ArrayList<Double>(Arrays.asList(0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0));
+	static Set<String> playedChampion=new HashSet<>();
 	
 	public static void SummonerIDbyName (String name) {
 		//System.out.println("Please enter your summoner name: ");
@@ -84,8 +96,10 @@ public class ChampionFrequency {
 		accountID=rootobj.get("accountId").getAsString(); 
 		System.out.println("Your encrypted accountID is "+accountID);
 	}
+	
 	public static void getChampName(){
-		Map<Integer,String> res=new HashMap<>();
+		Map<Integer,String> idToName=new HashMap<>();
+		Map<String,ArrayList<Integer>> nameToFeature=new HashMap<>();
 		String sURL = "http://ddragon.leagueoflegends.com/cdn/6.24.1/data/en_US/champion.json";
 		// Connect to the URL using java's native library
 		URL url = null;
@@ -118,14 +132,94 @@ public class ChampionFrequency {
 			e.printStackTrace();
 		} 
 		JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object. 
-		String dataString = rootobj.get("data").toString(); 
 		for(Entry<String, JsonElement> champ:rootobj.get("data").getAsJsonObject().entrySet()) {
+			//add to idToName
 			String champName=champ.getKey();
 			String idQuotation=champ.getValue().getAsJsonObject().get("key").toString();
 			Integer id=Integer.parseInt(idQuotation.substring(1, idQuotation.length()-1));
-			res.put(id, champName);
+			idToName.put(id, champName);
+			
+			//add to nameToFeature
+			ArrayList<Integer> thisFeature=new ArrayList<Integer>();
+			int attack=champ.getValue().getAsJsonObject().get("info").getAsJsonObject().get("attack").getAsInt();
+			int defense=champ.getValue().getAsJsonObject().get("info").getAsJsonObject().get("defense").getAsInt();
+			int magic=champ.getValue().getAsJsonObject().get("info").getAsJsonObject().get("magic").getAsInt();
+			int difficulty=champ.getValue().getAsJsonObject().get("info").getAsJsonObject().get("difficulty").getAsInt();
+			thisFeature.add(attack);
+			thisFeature.add(defense);
+			thisFeature.add(magic);
+			thisFeature.add(difficulty);
+			
+			boolean assassin=false;
+			boolean fighter=false;
+			boolean mage=false;
+			boolean tank=false;
+			boolean support=false;
+			boolean marksman=false;
+			JsonArray array = champ.getValue().getAsJsonObject().get("tags").getAsJsonArray();
+			int tagCount=0;
+			for(int i=0;i<array.size();i++) {
+				if(array.get(i).getAsString().equals("Assassin")) {
+					assassin=true;
+					tagCount++;
+				}
+				else if (array.get(i).getAsString().equals("Fighter")) {
+					fighter=true;
+					tagCount++;
+				}
+				else if (array.get(i).getAsString().equals("Mage")) {
+					mage=true;
+					tagCount++;
+				}
+				else if (array.get(i).getAsString().equals("Tank")) {
+					tank=true;
+					tagCount++;
+				}
+				else if (array.get(i).getAsString().equals("Support")) {
+					support=true;
+					tagCount++;
+				}
+				else if (array.get(i).getAsString().equals("Marksman")) {
+					marksman=true;
+					tagCount++;
+				}
+			}
+			int tagValue=15/tagCount;
+			if(assassin) {
+				thisFeature.add(tagValue);
+			}else {
+				thisFeature.add(0);
+			}
+			if(fighter) {
+				thisFeature.add(tagValue);
+			}else {
+				thisFeature.add(0);
+			}
+			if(mage) {
+				thisFeature.add(tagValue);
+			}else {
+				thisFeature.add(0);
+			}
+			if(tank) {
+				thisFeature.add(tagValue);
+			}else {
+				thisFeature.add(0);
+			}
+			if(support) {
+				thisFeature.add(tagValue);
+			}else {
+				thisFeature.add(0);
+			}
+			if(marksman) {
+				thisFeature.add(tagValue);
+			}else {
+				thisFeature.add(0);
+			}
+			nameToFeature.put(champName, thisFeature);
 		}
-		champIDMap=res;
+		
+		champIDMap=idToName;
+		champFeatureMap=nameToFeature;
 	}
 	
 	public static Map<String,Double> getChampKDA() {
@@ -166,7 +260,8 @@ public class ChampionFrequency {
 		JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object. 
 		List<String> list = new ArrayList<String>();
 		JsonArray array = rootobj.getAsJsonArray("matches");
-		for(int i=0;i<98;i++) {
+		
+		for(int i=0;i<array.size()-2;i++) { //for each match
 			int championID=((JsonObject) array.get(i)).get("champion").getAsInt();
 			String championName=champIDMap.get(championID);
 			String matchID=((JsonObject) array.get(i)).get("gameId").getAsString();
@@ -187,6 +282,17 @@ public class ChampionFrequency {
 					lastPlay.put(championName, wlt.time);
 				}
 			}
+			
+			//update playerFeature
+			ArrayList<Integer> championFeature=champFeatureMap.get(championName);
+			for(int j=0;j<10;j++) {
+				playerFeature.set(j, playerFeature.get(j)+championFeature.get(j));
+			}
+			//update playedChampion
+			playedChampion.add(championName);
+		}
+		for(int j=0;j<10;j++) {
+			playerFeature.set(j, playerFeature.get(j)/(array.size()-2));
 		}
 		Map<String,Double> res=new HashMap<String,Double>();
 		for(String champName:kdaMap.keySet()) {
@@ -194,6 +300,7 @@ public class ChampionFrequency {
 		}
 		return res;
 	}
+<<<<<<< HEAD
 
 	public static Map<String,Double> usedChampFinalRank(){
 		Map<String,Double> rank = getChampKDA();
@@ -223,5 +330,54 @@ public class ChampionFrequency {
 		return finalSortedRank;
 	}
 	
+=======
+	
+	public static ArrayList<String> recommendNew(){
+		ArrayList<String> res=new ArrayList<String>();
+		Map<String,Double> differenceMap=new HashMap<>();
+		for (Map.Entry <String,ArrayList<Integer>> entry : champFeatureMap.entrySet()) { //for every champion
+			String championName=entry.getKey();
+			//System.out.println("Champion: "+championName+"   "+entry.getValue());
+			//System.out.println("Now looking at: "+championName);
+			//if the champion has been played, skip it
+			if(playedChampion.contains(championName)) {
+				continue;
+			}
+			ArrayList<Integer> championFeature=entry.getValue();
+			double difference=0;
+			for(int i=0;i<10;i++) { //for each feature
+				if(i==3) { //if it is the difficulty feature
+					//if the player used to play hard champions, he can easily handle easier ones
+					difference=difference+(championFeature.get(i)-playerFeature.get(i));
+				}
+				else { //for other features
+					difference=difference+Math.pow((championFeature.get(i)-playerFeature.get(i)),2);
+				}
+			}
+			System.out.println("champion: "+championName+"   difference: "+difference);
+			differenceMap.put(championName, difference);	
+		}
+		List<Entry<String, Double>> list = new ArrayList<>(differenceMap.entrySet());
+        list.sort(Entry.comparingByValue());
+        //Map<String, Double> sortedMap = new LinkedHashMap<>();
+        for(int i=0;i<Math.min(5,list.size());i++) {
+        	System.out.println(i+"   name: "+list.get(i).getKey()+"   difference: "+list.get(i).getValue());
+        	res.add(list.get(i).getKey());
+        }
+		return res;
+	}
+	
+	public static void main(String[] args) {
+		long currentTime=System.currentTimeMillis();
+		getChampName();
+		//SummonerIDbyName();
+		//Map<String,Double> kdaResult=getChampKDA();
+		/*for(Map.Entry<String, ArrayList<Integer>> entry:champFeatureMap.entrySet()) {
+			String championName=entry.getKey();
+			//long timeDifference=currentTime-lastPlay.get(championName).longValue();
+			System.out.println("Champion: "+championName+"   "+entry.getValue());
+		}*/
+	}
+>>>>>>> 936ee8a86512977c5c21fdd747c560fda358da84
 	
 }
