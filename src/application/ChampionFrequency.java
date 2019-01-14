@@ -8,13 +8,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -28,7 +32,7 @@ import com.google.gson.GsonBuilder;
 
 
 public class ChampionFrequency {
-	final static String api_key="RGAPI-7b53ac55-13c3-4d36-b6f4-b05b2c36a6f7";
+	final static String api_key="RGAPI-4f9c7ce3-4030-4e79-b51a-8f7929578f48";
 	static String summonerID=null;
 	static String accountID=null;
 	static Gson gson = new GsonBuilder().enableComplexMapKeySerialization()
@@ -125,6 +129,8 @@ public class ChampionFrequency {
 	}
 	
 	public static Map<String,Double> getChampKDA() {
+
+		
 		String sURL = "https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/"+accountID+"?api_key="+api_key; //just a string
 		// Connect to the URL using java's native library
 		URL url = null;
@@ -188,16 +194,34 @@ public class ChampionFrequency {
 		}
 		return res;
 	}
-	/*public static void main(String[] args) {
-		long currentTime=System.currentTimeMillis();
-		getChampName();
-		SummonerIDbyName();
-		Map<String,Double> kdaResult=getChampKDA();
-		for(Map.Entry<String, Double> entry:kdaResult.entrySet()) {
-			String championName=entry.getKey();
-			long timeDifference=currentTime-lastPlay.get(championName).longValue();
-			System.out.println("Champion: "+championName+"   Times: "+freqMap.get(championName)+"   Average KDA: "+entry.getValue()+"   Since Last Played: "+timeDifference);
-		}	
-	}*/
+
+	public static Map<String,Double> usedChampFinalRank(){
+		Map<String,Double> rank = getChampKDA();
+		
+		//Numerize kda as part of the final value
+		rank.forEach((champ,kda) -> {
+			rank.put(
+					champ, 
+					(double)
+					// KDA of the champ, Having good gaming experience? WinLose incorporated
+					(kda*1.2 + 
+					//Level of proficiency, Likeness of the champ
+					freqMap.get(champ) * 0.5 - 
+					//Doesn't prefer using champs have used recently.
+					5 / ((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) + 
+					//If one hasn't use for a while, gradully grow the value of it.
+					((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) > 8 ? 
+							((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) * 0.2: 0));
+		});
+		
+		Map<String, Double> finalSortedRank = rank.entrySet().stream()
+                .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+	
+		
+		return finalSortedRank;
+	}
+	
 	
 }
