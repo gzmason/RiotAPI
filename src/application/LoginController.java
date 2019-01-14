@@ -117,7 +117,7 @@ public class LoginController implements Initializable {
 //						
 						loginButton.textProperty().unbind();
 						anotherButton.textProperty().unbind();
-						
+						newChampBtn.setDisable(false);
 						loginButton.setText("Logged in");
 						loginButton.setDisable(true);
 						nameTextField.setDisable(true);

@@ -15,10 +15,10 @@
     <Label layoutX="15.0" layoutY="113.0" prefWidth="146.0" text="Recommend Old Champ" />
     <TextField fx:id="recomTextField" disable="true" layoutX="14.0" layoutY="133.0" prefWidth="146.0" />
     <Button fx:id="anotherButton" disable="true" layoutX="14.0" layoutY="218.0" mnemonicParsing="false" onAction="#anotherChamp" prefHeight="22.0" prefWidth="146.0" text="Pick" />
-    <ImageView id="oldchampIcon" fx:id="champIcon" fitHeight="47.25" fitWidth="63.0" layoutX="59.0" layoutY="162.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="oldchampIcon" fitHeight="47.25" fitWidth="63.0" layoutX="59.0" layoutY="162.0" pickOnBounds="true" preserveRatio="true" />
     <Label layoutX="166.0" layoutY="114.0" prefHeight="16.0" prefWidth="148.5" text="Recommend new Champ" />
     <TextField fx:id="newChamp" disable="true" layoutX="165.0" layoutY="133.0" prefHeight="22.0" prefWidth="146.0" />
     <Button fx:id="newChampBtn" disable="true" layoutX="165.0" layoutY="217.0" mnemonicParsing="false" onAction="#anotherNew" prefHeight="23.0" prefWidth="146.0" text="Pick" />
-    <ImageView id="newchampIcon" fitHeight="47.25" fitWidth="63.000003573619736" layoutX="207.0" layoutY="162.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="newchampIcon" fitHeight="47.25" fitWidth="63.000003573619736" layoutX="207.0" layoutY="162.0" pickOnBounds="true" preserveRatio="true" />
   </children>
 </AnchorPane>
