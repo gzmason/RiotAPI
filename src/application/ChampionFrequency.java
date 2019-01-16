@@ -52,6 +52,7 @@ public class ChampionFrequency {
 	static ArrayList<Double> playerFeature=new ArrayList<Double>(Arrays.asList(0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0));
 	static Set<String> playedChampion=new HashSet<>();
 	static Map<String,Integer> tagFreq=new HashMap<String, Integer>();
+	static Map<String,Integer> winLose=new HashMap<String, Integer>();
 	
 	public static void SummonerIDbyName (String name) {
 		//System.out.println("Please enter your summoner name: ");
@@ -274,6 +275,10 @@ public class ChampionFrequency {
 			double winBonus=0;
 			if(wlt.win) {
 				winBonus=1.5;
+				winLose.put(championName, 0);
+			}
+			else {
+				winLose.put(championName, 1);
 			}
 			kdaMap.put(championName, kdaMap.getOrDefault(championName, 0.0)+wlt.kda+winBonus);
 			freqMap.put(championName, freqMap.getOrDefault(championName,0)+1);
@@ -357,13 +362,11 @@ public class ChampionFrequency {
 					//If one hasn't use for a while, gradully grow the value of it.
 					timeDifference > 8 ? timeDifference * 0.2: 0));
 		});
-		System.out.print("T2");
-
+		
 		Map<String, Double> finalSortedRank = rank.entrySet().stream()
                 .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-		System.out.print("T3");
 
 		
 		return finalSortedRank;
@@ -411,17 +414,17 @@ public class ChampionFrequency {
 		return res;
 	}
 	
-	public static void main(String[] args) {
-//		long currentTime=System.currentTimeMillis();
-//		getChampName();
-		//SummonerIDbyName();
-		//Map<String,Double> kdaResult=getChampKDA();
-		/*for(Map.Entry<String, ArrayList<Integer>> entry:champFeatureMap.entrySet()) {
-			String championName=entry.getKey();
-			//long timeDifference=currentTime-lastPlay.get(championName).longValue();
-			System.out.println("Champion: "+championName+"   "+entry.getValue());
-		}*/
-	}
+//	public static void main(String[] args) {
+////		long currentTime=System.currentTimeMillis();
+////		getChampName();
+//		//SummonerIDbyName();
+//		//Map<String,Double> kdaResult=getChampKDA();
+//		/*for(Map.Entry<String, ArrayList<Integer>> entry:champFeatureMap.entrySet()) {
+//			String championName=entry.getKey();
+//			//long timeDifference=currentTime-lastPlay.get(championName).longValue();
+//			System.out.println("Champion: "+championName+"   "+entry.getValue());
+//		}*/
+//	}
 
 	
 }

@@ -2,10 +2,13 @@
 package application;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Map.Entry;
 
 import javafx.scene.image.Image;
 import javafx.scene.control.Alert;
@@ -19,6 +22,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 
@@ -47,6 +51,12 @@ public class LoginController implements Initializable {
 	
 	@FXML
 	private ImageView newchampIcon;
+	
+	@FXML
+	private Label oldLable;
+	
+	@FXML
+	private Label newLable;
 
 	private Service<Void> backgroundThread;
 
@@ -150,6 +160,19 @@ public class LoginController implements Initializable {
 		
 		if(oldRecommendList.size() != 0) {
 			String champ = oldRecommendList.remove(0);
+			int kda = (int) Math.round(ChampionFrequency.kdaMap.get(champ));
+			System.out.println(ChampionFrequency.lastPlay.get(champ));
+			Date lastPlay = new java.util.Date((ChampionFrequency.lastPlay.get(champ)));
+			System.out.println(lastPlay);
+			SimpleDateFormat dt = new SimpleDateFormat("MM/dd"); 
+			String date = dt.format(lastPlay);
+			String winLose = ChampionFrequency.winLose.get(champ) == 0 ? "Win" : "Lose";
+			int recomVal = (int) Math.round(finalResult.get(champ));
+			
+			oldLable.setText("KDA: " + kda + "\n" +
+							 "Last Play: " + date + "\n" +
+							 "Win/Lose: " + winLose + "\n" +
+							 "RecmdVal: " + recomVal);
 			
 			recomTextField.setText(champ);
 			recomTextField.setDisable(true);
@@ -166,7 +189,15 @@ public class LoginController implements Initializable {
 		
 		if(newRecommendList.size() != 0) {
 			String champ = newRecommendList.remove(0);
+			int count = 0;
+			String[] mostPlayed = new String[2];
+			for(Entry<String,Integer> entry:ChampionFrequency.tagFreq.entrySet()) {		
+				mostPlayed[count++] = entry.getKey();
+				if(count == 2) break;
+			}
 			
+			newLable.setText("Most play tag: \n"
+					+ mostPlayed[0] + "\n" + mostPlayed[1]);
 			newChamp.setText(champ);
 			newChamp.setDisable(true);
 			String url = "http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/" + champ + ".png";
