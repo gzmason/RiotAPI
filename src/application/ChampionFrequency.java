@@ -37,7 +37,11 @@ import com.google.gson.GsonBuilder;
 
 public class ChampionFrequency {
 
+<<<<<<< HEAD
 	final static String api_key="RGAPI-214579f3-f679-47f7-9946-cea6740bebe9";
+=======
+	final static String api_key="RGAPI-8cb7da65-339a-42b6-a8e2-519949d5213d";
+>>>>>>> cc27a4e3606007a3ac64ef0f0b524c9cb2bf4118
 
 	static String summonerID=null;
 	static String accountID=null;
@@ -50,6 +54,7 @@ public class ChampionFrequency {
 	static Map<String,ArrayList<Integer>> champFeatureMap=new HashMap<String,ArrayList<Integer>>();
 	static ArrayList<Double> playerFeature=new ArrayList<Double>(Arrays.asList(0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0));
 	static Set<String> playedChampion=new HashSet<>();
+	static Map<String,Integer> tagFreq=new HashMap<String, Integer>();
 	
 	public static void SummonerIDbyName (String name) {
 		//System.out.println("Please enter your summoner name: ");
@@ -181,7 +186,7 @@ public class ChampionFrequency {
 					tagCount++;
 				}
 			}
-			int tagValue=15/tagCount;
+			int tagValue=20/tagCount;
 			if(assassin) {
 				thisFeature.add(tagValue);
 			}else {
@@ -259,7 +264,6 @@ public class ChampionFrequency {
 		JsonArray array = rootobj.getAsJsonArray("matches");
 		
 		for(int i=0;i<array.size()-2;i++) { //for each match
-			System.out.print(i);
 			int championID=((JsonObject) array.get(i)).get("champion").getAsInt();
 			//System.out.print(" championID: "+championID);
 			String championName=champIDMap.get(championID);
@@ -294,6 +298,26 @@ public class ChampionFrequency {
 	
 			//update playedChampion
 			playedChampion.add(championName);
+			
+			//update tagFreq
+			if(championFeature.get(4)!=0) {
+				tagFreq.put("Assassin", tagFreq.getOrDefault("Assassin", 0)+1);
+			}
+			if(championFeature.get(5)!=0) {
+				tagFreq.put("Fighter", tagFreq.getOrDefault("Fighter", 0)+1);
+			}
+			if(championFeature.get(6)!=0) {
+				tagFreq.put("Mage", tagFreq.getOrDefault("Mage", 0)+1);
+			}
+			if(championFeature.get(7)!=0) {
+				tagFreq.put("Tank", tagFreq.getOrDefault("Tank", 0)+1);
+			}
+			if(championFeature.get(8)!=0) {
+				tagFreq.put("Support", tagFreq.getOrDefault("Support", 0)+1);
+			}
+			if(championFeature.get(9)!=0) {
+				tagFreq.put("Marksman", tagFreq.getOrDefault("Marksman", 0)+1);
+			}	
 		}
 		for(int j=0;j<10;j++) {
 			playerFeature.set(j, playerFeature.get(j)/(array.size()-2));
@@ -302,6 +326,16 @@ public class ChampionFrequency {
 		for(String champName:kdaMap.keySet()) {
 			res.put(champName, kdaMap.get(champName)/freqMap.get(champName));
 		}
+		
+		//sort freqMap
+		freqMap = freqMap.entrySet().stream()
+                .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		//sort tagFreq		
+		tagFreq = tagFreq.entrySet().stream()
+                .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		
 		return res;
 	}
 
@@ -374,9 +408,14 @@ public class ChampionFrequency {
 					difference=difference+Math.pow((championFeature.get(i)-playerFeature.get(i)),2);
 				}
 			}
-			System.out.println("champion: "+championName+"   difference: "+difference);
+			//System.out.println("champion: "+championName+"   difference: "+difference);
 			differenceMap.put(championName, difference);	
 		}
+		
+		for(Entry<String,Integer> entry:tagFreq.entrySet()) {
+			System.out.println(entry.getKey()+" "+entry.getValue());
+		}
+		
 		List<Entry<String, Double>> list = new ArrayList<>(differenceMap.entrySet());
         list.sort(Entry.comparingByValue());
         //Map<String, Double> sortedMap = new LinkedHashMap<>();
