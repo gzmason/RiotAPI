@@ -37,11 +37,8 @@ import com.google.gson.GsonBuilder;
 
 public class ChampionFrequency {
 
-<<<<<<< HEAD
+
 	final static String api_key="RGAPI-214579f3-f679-47f7-9946-cea6740bebe9";
-=======
-	final static String api_key="RGAPI-8cb7da65-339a-42b6-a8e2-519949d5213d";
->>>>>>> cc27a4e3606007a3ac64ef0f0b524c9cb2bf4118
 
 	static String summonerID=null;
 	static String accountID=null;
@@ -342,22 +339,11 @@ public class ChampionFrequency {
 
 	public static Map<String,Double> usedChampFinalRank(){
 		Map<String,Double> rank = getChampKDA();
-		System.out.print("T1");
 		//Numerize kda as part of the final value
 		rank.forEach((champ,kda) -> {
-			if(champ == null) champ = "null";
 
-			System.out.println((double)
-					// KDA of the champ, Having good gaming experience? WinLose incorporated
-					(kda*1.2));
-			System.out.println((double)
-					freqMap.get(champ) * 0.5); 
-			System.out.println((double)
-					5 / ((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ));
-			
-			System.out.println((double)
-					((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) > 8 ? 
-							((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) * 0.2: 0);
+			double timeDifference = (System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24)
+					== 0 ? 1 : (System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24);
 			
 			rank.put(
 					champ, 
@@ -367,10 +353,9 @@ public class ChampionFrequency {
 					//Level of proficiency, Likeness of the champ
 					freqMap.get(champ) * 0.5 - 
 					//Doesn't prefer using champs have used recently.
-					5 / ((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) + 
+					5 / timeDifference + 
 					//If one hasn't use for a while, gradully grow the value of it.
-					((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) > 8 ? 
-							((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) * 0.2: 0));
+					timeDifference > 8 ? timeDifference * 0.2: 0));
 		});
 		System.out.print("T2");
 
