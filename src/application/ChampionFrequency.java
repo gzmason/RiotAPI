@@ -37,7 +37,7 @@ import com.google.gson.GsonBuilder;
 
 public class ChampionFrequency {
 
-	final static String api_key="RGAPI-4f9c7ce3-4030-4e79-b51a-8f7929578f48";
+	final static String api_key="RGAPI-214579f3-f679-47f7-9946-cea6740bebe9";
 
 	static String summonerID=null;
 	static String accountID=null;
@@ -308,9 +308,23 @@ public class ChampionFrequency {
 
 	public static Map<String,Double> usedChampFinalRank(){
 		Map<String,Double> rank = getChampKDA();
-		
+		System.out.print("T1");
 		//Numerize kda as part of the final value
 		rank.forEach((champ,kda) -> {
+			if(champ == null) champ = "null";
+
+			System.out.println((double)
+					// KDA of the champ, Having good gaming experience? WinLose incorporated
+					(kda*1.2));
+			System.out.println((double)
+					freqMap.get(champ) * 0.5); 
+			System.out.println((double)
+					5 / ((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ));
+			
+			System.out.println((double)
+					((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) > 8 ? 
+							((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) * 0.2: 0);
+			
 			rank.put(
 					champ, 
 					(double)
@@ -324,12 +338,14 @@ public class ChampionFrequency {
 					((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) > 8 ? 
 							((System.currentTimeMillis() - lastPlay.get(champ)) / (1000*60*60*24) ) * 0.2: 0));
 		});
-		
+		System.out.print("T2");
+
 		Map<String, Double> finalSortedRank = rank.entrySet().stream()
                 .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-	
+		System.out.print("T3");
+
 		
 		return finalSortedRank;
 	}
