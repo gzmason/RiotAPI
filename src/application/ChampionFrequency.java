@@ -38,7 +38,7 @@ import com.google.gson.GsonBuilder;
 public class ChampionFrequency {
 
 
-	final static String api_key="RGAPI-214579f3-f679-47f7-9946-cea6740bebe9";
+	final static String api_key="RGAPI-cc91f6a5-5229-454a-bc50-da1265e9dd8f";
 
 	static String summonerID=null;
 	static String accountID=null;
@@ -400,18 +400,35 @@ public class ChampionFrequency {
 			differenceMap.put(championName, difference);	
 		}
 		
-		for(Entry<String,Integer> entry:tagFreq.entrySet()) {
+		/*for(Entry<String,Integer> entry:tagFreq.entrySet()) {
 			System.out.println(entry.getKey()+" "+entry.getValue());
-		}
+		}*/
 		
 		List<Entry<String, Double>> list = new ArrayList<>(differenceMap.entrySet());
         list.sort(Entry.comparingByValue());
         //Map<String, Double> sortedMap = new LinkedHashMap<>();
         for(int i=0;i<Math.min(5,list.size());i++) {
-        	System.out.println(i+"   name: "+list.get(i).getKey()+"   difference: "+list.get(i).getValue());
+        	//System.out.println(i+"   name: "+list.get(i).getKey()+"   difference: "+list.get(i).getValue());
         	res.add(list.get(i).getKey());
         }
 		return res;
+	}
+	
+	public static boolean checkName(String name) {
+		String testString="^[0-9\\p{L} _\\.]+$";
+		for(int i=0;i<name.length();i++) {
+			char nameChar=name.charAt(i);
+			if(testString.indexOf(nameChar)==-1) {
+				if(nameChar<'a'||nameChar>'z') {
+					if(nameChar<'A'||nameChar>'Z') {
+						//System.out.println("false");
+						return false;
+					}
+				}
+			}
+		}
+		//System.out.println("true");
+		return true;
 	}
 	
 //	public static void main(String[] args) {

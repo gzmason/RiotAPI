@@ -91,19 +91,23 @@ public class LoginController implements Initializable {
 
 							@Override
 							protected Void call() throws Exception {
-								updateMessage("Logging in...");
-								ChampionFrequency.getChampName();
-								ChampionFrequency.SummonerIDbyName(nameTextField.getText());
-								System.out.println("test1");
-								finalResult = ChampionFrequency.usedChampFinalRank();
-								System.out.println("test2");
-								newRecommendList = ChampionFrequency.recommendNew();
-								System.out.println("test");
-								for (Map.Entry<String, Double> entry : finalResult.entrySet()) {
-									String championName = entry.getKey();
-									oldRecommendList.add(championName);
-									System.out.println("Champion: " + championName + " RankValue: " 
-									+ finalResult.get(championName));
+								String name=nameTextField.getText();
+								if(ChampionFrequency.checkName(name)) {
+									updateMessage("Logging in...");
+									ChampionFrequency.getChampName();
+									name=name.replaceAll("\\s",""); //delete spaces
+									ChampionFrequency.SummonerIDbyName(name);
+									System.out.println("test1");
+									finalResult = ChampionFrequency.usedChampFinalRank();
+									System.out.println("test2");
+									newRecommendList = ChampionFrequency.recommendNew();
+									System.out.println("test");
+									for (Map.Entry<String, Double> entry : finalResult.entrySet()) {
+										String championName = entry.getKey();
+										oldRecommendList.add(championName);
+										System.out.println("Champion: " + championName + " RankValue: " 
+										+ finalResult.get(championName));
+									}
 								}
 								
 								return null;
