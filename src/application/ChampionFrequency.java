@@ -38,7 +38,7 @@ import com.google.gson.GsonBuilder;
 public class ChampionFrequency {
 
 
-	final static String api_key="RGAPI-e5bcd668-9154-4ef1-be30-5db237cc1027";
+	final static String api_key="RGAPI-1b953b1e-2292-4f6f-9bf8-95aaeb0905d4";
 
 	static String summonerID=null;
 	static String accountID=null;
@@ -62,17 +62,17 @@ public class ChampionFrequency {
 		// Connect to the URL using java's native library
 		URL url = null;
 		URLConnection request = null;
-		try {
+		//try {
 			url = new URL(sURL);
 			request = url.openConnection();
 			request.connect();
-		} catch (MalformedURLException e1) {
+		//} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
-			System.out.println("MalformedURL");
-		}catch (IOException e1) {
+			//System.out.println("MalformedURL");
+		//}catch (IOException e1) {
 			// TODO Auto-generated catch block
-			System.out.println("IOException "+e1.getMessage());
-		}
+			//System.out.println("IOException "+e1.getMessage());
+		//}
 		
 		// Convert to a JSON object to print data
 		JsonParser jp = new JsonParser(); //from gson
@@ -104,17 +104,17 @@ public class ChampionFrequency {
 		// Connect to the URL using java's native library
 		URL url = null;
 		URLConnection request = null;
-		try {
+		//try {
 			url = new URL(sURL);
 			request = url.openConnection();
 			request.connect();
-		} catch (MalformedURLException e1) {
+		//} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
-			System.out.println("MalformedURL");
-		}catch (IOException e1) {
+			//System.out.println("MalformedURL");
+		//}catch (IOException e1) {
 			// TODO Auto-generated catch block
-			System.out.println("IOException "+e1.getMessage());
-		}
+			//System.out.println("IOException "+e1.getMessage());
+		//}
 		
 		// Convert to a JSON object to print data
 		JsonParser jp = new JsonParser(); //from gson
@@ -222,40 +222,41 @@ public class ChampionFrequency {
 		champFeatureMap=nameToFeature;
 	}
 	
-	public static Map<String,Double> getChampKDA() {
+	public static Map<String,Double> getChampKDA() throws Exception{
 
 		
 		String sURL = "https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/"+accountID+"?api_key="+api_key; //just a string
 		// Connect to the URL using java's native library
 		URL url = null;
 		URLConnection request = null;
-		try {
+		//try {
 			url = new URL(sURL);
 			request = url.openConnection();
 			request.connect();
-		} catch (MalformedURLException e1) {
+		//} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
-			System.out.println("MalformedURL");
-		}catch (IOException e1) {
+			//System.out.println("MalformedURL");
+		//}catch (IOException e1) {
 			// TODO Auto-generated catch block
-			System.out.println("IOException "+e1.getMessage());
-		}
+			//System.out.println("IOException "+e1.getMessage());
+		//}
+		
 		
 		// Convert to a JSON object to print data
 		JsonParser jp = new JsonParser(); //from gson
 		JsonElement root = null;
-		try {
+		//try {
 			root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
-		} catch (JsonIOException e) {
+		//} catch (JsonIOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonSyntaxException e) {
+			//e.printStackTrace();
+		//} catch (JsonSyntaxException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+			//e.printStackTrace();
+		//} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+			//e.printStackTrace();
+		//} 
 		//Convert the input stream to a json element
 		JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object. 
 		List<String> list = new ArrayList<String>();
@@ -342,7 +343,7 @@ public class ChampionFrequency {
 	}
 
 
-	public static Map<String,Double> usedChampFinalRank(){
+	public static Map<String,Double> usedChampFinalRank() throws Exception{
 		Map<String,Double> rank = getChampKDA();
 		//Numerize kda as part of the final value
 		rank.forEach((champ,kda) -> {

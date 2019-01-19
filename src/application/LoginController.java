@@ -96,17 +96,17 @@ public class LoginController implements Initializable {
 								ChampionFrequency.getChampName();
 								name = name.replaceAll("\\s", ""); // delete spaces
 								ChampionFrequency.SummonerIDbyName(name);
-								System.out.println("test1");
+								//System.out.println("test1");
 								finalResult = ChampionFrequency.usedChampFinalRank();
-								System.out.println("test2");
+								//System.out.println("test2");
 								newRecommendList = ChampionFrequency.recommendNew();
-								System.out.println("test");
-								for (Map.Entry<String, Double> entry : finalResult.entrySet()) {
+								//System.out.println("test");
+								/*for (Map.Entry<String, Double> entry : finalResult.entrySet()) {
 									String championName = entry.getKey();
 									oldRecommendList.add(championName);
 									System.out.println("Champion: " + championName + " RankValue: "
 											+ finalResult.get(championName));
-								}
+								}*/
 
 								return null;
 							}
@@ -173,9 +173,9 @@ public class LoginController implements Initializable {
 		if (oldRecommendList.size() != 0) {
 			String champ = oldRecommendList.remove(0);
 			int kda = (int) Math.round(ChampionFrequency.kdaMap.get(champ));
-			System.out.println(ChampionFrequency.lastPlay.get(champ));
+			//System.out.println(ChampionFrequency.lastPlay.get(champ));
 			Date lastPlay = new java.util.Date((ChampionFrequency.lastPlay.get(champ)));
-			System.out.println(lastPlay);
+			//System.out.println(lastPlay);
 			SimpleDateFormat dt = new SimpleDateFormat("MM/dd");
 			String date = dt.format(lastPlay);
 			String winLose = ChampionFrequency.winLose.get(champ) == 0 ? "Win" : "Lose";
