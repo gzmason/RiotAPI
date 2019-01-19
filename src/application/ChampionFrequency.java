@@ -38,7 +38,7 @@ import com.google.gson.GsonBuilder;
 public class ChampionFrequency {
 
 
-	final static String api_key="RGAPI-cc91f6a5-5229-454a-bc50-da1265e9dd8f";
+	final static String api_key="RGAPI-e5bcd668-9154-4ef1-be30-5db237cc1027";
 
 	static String summonerID=null;
 	static String accountID=null;
@@ -54,7 +54,7 @@ public class ChampionFrequency {
 	static Map<String,Integer> tagFreq=new HashMap<String, Integer>();
 	static Map<String,Integer> winLose=new HashMap<String, Integer>();
 	
-	public static void SummonerIDbyName (String name) {
+	public static void SummonerIDbyName (String name) throws JsonIOException, JsonSyntaxException, IOException {
 		//System.out.println("Please enter your summoner name: ");
 		//Scanner scan=new Scanner(System.in);
 		String summonerName=name;
@@ -77,18 +77,18 @@ public class ChampionFrequency {
 		// Convert to a JSON object to print data
 		JsonParser jp = new JsonParser(); //from gson
 		JsonElement root = null;
-		try {
+//		try {
 			root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
-		} catch (JsonIOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonSyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+//		} catch (JsonIOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (JsonSyntaxException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} 
 		//Convert the input stream to a json element
 		JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object. 
 		summonerID = rootobj.get("id").getAsString(); //just grab the name
@@ -97,7 +97,7 @@ public class ChampionFrequency {
 		System.out.println("Your encrypted accountID is "+accountID);
 	}
 	
-	public static void getChampName(){
+	public static void getChampName() throws JsonIOException, JsonSyntaxException, IOException{
 		Map<Integer,String> idToName=new HashMap<>();
 		Map<String,ArrayList<Integer>> nameToFeature=new HashMap<>();
 		String sURL = "http://ddragon.leagueoflegends.com/cdn/6.24.1/data/en_US/champion.json";
@@ -119,18 +119,18 @@ public class ChampionFrequency {
 		// Convert to a JSON object to print data
 		JsonParser jp = new JsonParser(); //from gson
 		JsonElement root = null;
-		try {
+//		try {
 			root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
-		} catch (JsonIOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonSyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+//		} catch (JsonIOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (JsonSyntaxException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} 
 		JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object. 
 		for(Entry<String, JsonElement> champ:rootobj.get("data").getAsJsonObject().entrySet()) {
 			//add to idToName
