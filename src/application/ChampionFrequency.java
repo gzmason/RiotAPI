@@ -234,16 +234,16 @@ public class ChampionFrequency {
 		champFeatureMap=nameToFeature;
 	}
 	
-	public static Map<String,Double> getChampKDA() throws Exception{
+	public static Map<String,Double> getChampKDA() throws ForbiddenException,ServiceUnavailableException, RateLimitException, InternalServerException, JsonIOException, JsonSyntaxException, IOException{
 
 		
 		String sURL = "https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/"+accountID+"?api_key="+api_key; //just a string
 		// Connect to the URL using java's native library
 		URL url = null;
-		URLConnection request = null;
+		HttpURLConnection request = null;
 		//try {
 			url = new URL(sURL);
-			request = url.openConnection();
+			request = (HttpURLConnection) url.openConnection();
 			request.connect();
 		//} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
@@ -253,7 +253,17 @@ public class ChampionFrequency {
 			//System.out.println("IOException "+e1.getMessage());
 		//}
 		
-		
+		int response=request.getResponseCode();
+		if(response==429) {
+			throw new RateLimitException("429");
+		}else if(response==500) {
+			throw new InternalServerException("500");
+		}else if(response==503) {
+			throw new ServiceUnavailableException("503");
+		}else if(response==404) {
+			throw new ForbiddenException("404");
+		}
+			
 		// Convert to a JSON object to print data
 		JsonParser jp = new JsonParser(); //from gson
 		JsonElement root = null;

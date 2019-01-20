@@ -91,16 +91,26 @@ public class LoginController implements Initializable {
 							//Background thread of accessing APIs
 							@Override
 							protected Void call() throws Exception {
-								String name = nameTextField.getText();
-								updateMessage("Logging in...");
-								ChampionFrequency.getChampName();
-								name = name.replaceAll("\\s", ""); // delete spaces
-								ChampionFrequency.SummonerIDbyName(name);
-								finalResult = ChampionFrequency.usedChampFinalRank();
-								newRecommendList = ChampionFrequency.recommendNew();
-								for (Map.Entry<String, Double> entry : finalResult.entrySet()) {
-									String championName = entry.getKey();
-									oldRecommendList.add(championName);
+								try {
+									String name = nameTextField.getText();
+									updateMessage("Logging in...");
+									ChampionFrequency.getChampName();
+									name = name.replaceAll("\\s", ""); // delete spaces
+									ChampionFrequency.SummonerIDbyName(name);
+									finalResult = ChampionFrequency.usedChampFinalRank();
+									newRecommendList = ChampionFrequency.recommendNew();
+									for (Map.Entry<String, Double> entry : finalResult.entrySet()) {
+										String championName = entry.getKey();
+										oldRecommendList.add(championName);
+									}
+								}catch(ForbiddenException f) {
+									System.out.println(f.getMessage());
+								}catch(InternalServerException i) {
+									System.out.println(i.getMessage());
+								}catch(RateLimitException r) {
+									System.out.println(r.getMessage());
+								}catch(ServiceUnavailableException s) {
+									System.out.println(s.getMessage());
 								}
 
 								return null;
@@ -111,7 +121,8 @@ public class LoginController implements Initializable {
 				};
 				
 				//When any of the accessing API went into exception.
-				backgroundThread.setOnFailed(new EventHandler<WorkerStateEvent>() {
+				
+				/*backgroundThread.setOnFailed(new EventHandler<WorkerStateEvent>() {
 
 					@Override
 					public void handle(WorkerStateEvent arg0) {
@@ -128,7 +139,7 @@ public class LoginController implements Initializable {
 						loginButton.setDisable(false);
 					}
 
-				});
+				});*/
 				
 				//When task is done successfully
 				backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
