@@ -96,6 +96,10 @@ public class LoginController implements Initializable {
 								ChampionFrequency.getChampName();
 								name = name.replaceAll("\\s", ""); // delete spaces
 								ChampionFrequency.SummonerIDbyName(name);
+								if(ChampionFrequency.accountID.equals(null)) {
+									System.out.println("Error while Getting Summoner Info");
+									return null;
+								}
 								//System.out.println("test1");
 								finalResult = ChampionFrequency.usedChampFinalRank();
 								//System.out.println("test2");
