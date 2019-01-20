@@ -68,6 +68,7 @@ public class LoginController implements Initializable {
 
 	private List<String> newRecommendList = new ArrayList<>();
 
+	private Exception exp;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -104,13 +105,17 @@ public class LoginController implements Initializable {
 										oldRecommendList.add(championName);
 									}
 								}catch(ForbiddenException f) {
-									System.out.println(f.getMessage());
+									exp = f;
+									throw new Exception();
 								}catch(InternalServerException i) {
-									System.out.println(i.getMessage());
+									exp = i;
+									throw new Exception();
 								}catch(RateLimitException r) {
-									System.out.println(r.getMessage());
+									exp = r;
+									throw new Exception();
 								}catch(ServiceUnavailableException s) {
-									System.out.println(s.getMessage());
+									exp = s;
+									throw new Exception();
 								}
 
 								return null;
@@ -120,26 +125,30 @@ public class LoginController implements Initializable {
 
 				};
 				
-				//When any of the accessing API went into exception.
-				
-				/*backgroundThread.setOnFailed(new EventHandler<WorkerStateEvent>() {
+				//When any of the accessing API went into exception.				
+				backgroundThread.setOnFailed(new EventHandler<WorkerStateEvent>() {
 
 					@Override
 					public void handle(WorkerStateEvent arg0) {
 						// TODO Auto-generated method stub
 						alert.setHeaderText(null);
-						alert.setContentText("Something is wrong with your ID, please check and try again!");
+						String text = "";
+						switch(exp.getMessage()){
+						case "404" :text = "Error 404: ID does not exist, please check your summoner name";break;
+						case "500" :text = "Error 500: Internal server error,  please use it later.";break;
+						case "503" :text = "Error 503: Service unvaiable, please use it later.";break;
+						case "429" :text = "Error 429: API limit exceeded, please try again in two minutes.";break;	
+						}
+						alert.setContentText(text);
 						alert.showAndWait();
-						
-						
+											
 						loginButton.textProperty().unbind();
 						anotherButton.textProperty().unbind();
 						nameTextField.setText("");
 						loginButton.setText("Login");
 						loginButton.setDisable(false);
 					}
-
-				});*/
+				});
 				
 				//When task is done successfully
 				backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
