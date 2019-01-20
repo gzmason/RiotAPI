@@ -364,12 +364,11 @@ public class ChampionFrequency {
 					timeDifference > 8 ? timeDifference * 0.2: 0));
 		});
 		
+		//Sort Map for recommending order
 		Map<String, Double> finalSortedRank = rank.entrySet().stream()
                 .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-
-		
+	
 		return finalSortedRank;
 	}
 	

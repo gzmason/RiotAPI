@@ -88,7 +88,7 @@ public class LoginController implements Initializable {
 					protected Task<Void> createTask() {
 						// TODO Auto-generated method stub
 						return new Task<Void>() {
-
+							//Background thread of accessing APIs
 							@Override
 							protected Void call() throws Exception {
 								String name = nameTextField.getText();
@@ -96,17 +96,12 @@ public class LoginController implements Initializable {
 								ChampionFrequency.getChampName();
 								name = name.replaceAll("\\s", ""); // delete spaces
 								ChampionFrequency.SummonerIDbyName(name);
-								//System.out.println("test1");
 								finalResult = ChampionFrequency.usedChampFinalRank();
-								//System.out.println("test2");
 								newRecommendList = ChampionFrequency.recommendNew();
-								//System.out.println("test");
-								/*for (Map.Entry<String, Double> entry : finalResult.entrySet()) {
+								for (Map.Entry<String, Double> entry : finalResult.entrySet()) {
 									String championName = entry.getKey();
 									oldRecommendList.add(championName);
-									System.out.println("Champion: " + championName + " RankValue: "
-											+ finalResult.get(championName));
-								}*/
+								}
 
 								return null;
 							}
@@ -114,6 +109,8 @@ public class LoginController implements Initializable {
 					}
 
 				};
+				
+				//When any of the accessing API went into exception.
 				backgroundThread.setOnFailed(new EventHandler<WorkerStateEvent>() {
 
 					@Override
@@ -122,24 +119,26 @@ public class LoginController implements Initializable {
 						alert.setHeaderText(null);
 						alert.setContentText("Something is wrong with your ID, please check and try again!");
 						alert.showAndWait();
+						
+						
+						loginButton.textProperty().unbind();
+						anotherButton.textProperty().unbind();
 						nameTextField.setText("");
 						loginButton.setText("Login");
 						loginButton.setDisable(false);
 					}
 
 				});
+				
+				//When task is done successfully
 				backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
 					@Override
 					public void handle(WorkerStateEvent arg0) {
-						// TODO Auto-generated method stub
-
 						alert.setHeaderText(null);
 						alert.setContentText("Login Success!");
 						alert.showAndWait();
-						anotherButton.setDisable(false);
-//						
-//						
+						anotherButton.setDisable(false);					
 						loginButton.textProperty().unbind();
 						anotherButton.textProperty().unbind();
 						newChampBtn.setDisable(false);
@@ -151,12 +150,10 @@ public class LoginController implements Initializable {
 				});
 
 				loginButton.textProperty().bind(backgroundThread.messageProperty());
-				// anotherButton.textProperty().bind(backgroundThread.messageProperty());
 			}
-
 			backgroundThread.restart();
+			
 		} catch (Exception e) {
-			// e.printStackTrace();
 			alert.setHeaderText(null);
 			alert.setContentText("Something wrong with your summoner name, Please try again!");
 			alert.showAndWait();
@@ -166,24 +163,20 @@ public class LoginController implements Initializable {
 		}
 
 	}
-
+	//When oldChamp pick is clicked
 	public void anotherChamp(ActionEvent event) {
 		anotherButton.setText("Another Pick");
 
 		if (oldRecommendList.size() != 0) {
 			String champ = oldRecommendList.remove(0);
 			int kda = (int) Math.round(ChampionFrequency.kdaMap.get(champ));
-			//System.out.println(ChampionFrequency.lastPlay.get(champ));
 			Date lastPlay = new java.util.Date((ChampionFrequency.lastPlay.get(champ)));
-			//System.out.println(lastPlay);
 			SimpleDateFormat dt = new SimpleDateFormat("MM/dd");
 			String date = dt.format(lastPlay);
 			String winLose = ChampionFrequency.winLose.get(champ) == 0 ? "Win" : "Lose";
 			int recomVal = (int) Math.round(finalResult.get(champ));
-
 			oldLable.setText("KDA: " + kda + "\n" + "Last Play: " + date + "\n" + "Win/Lose: " + winLose + "\n"
 					+ "RecmdVal: " + recomVal);
-
 			recomTextField.setText(champ);
 			recomTextField.setDisable(true);
 			String url = "http://ddragon.leagueoflegends.com/cdn/6.24.1/img/champion/" + champ + ".png";
@@ -193,7 +186,7 @@ public class LoginController implements Initializable {
 			oldchampIcon.setCache(true);
 		}
 	}
-
+	//When newChamp pick is clicked
 	public void anotherNew(ActionEvent event) {
 		newChampBtn.setText("Another Pick");
 
