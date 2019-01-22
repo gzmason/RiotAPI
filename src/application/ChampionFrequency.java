@@ -39,7 +39,7 @@ import com.google.gson.GsonBuilder;
 public class ChampionFrequency {
 
 
-	final static String api_key="RGAPI-1b953b1e-2292-4f6f-9bf8-95aaeb0905d4";
+	final static String api_key="RGAPI-4bf85da7-f1ee-4755-8b25-b4ae86362f3f";
 
 	static String summonerID=null;
 	static String accountID=null;
@@ -252,7 +252,6 @@ public class ChampionFrequency {
 			// TODO Auto-generated catch block
 			//System.out.println("IOException "+e1.getMessage());
 		//}
-		
 		int response=request.getResponseCode();
 		if(response==429) {
 			throw new RateLimitException("429");
@@ -293,7 +292,7 @@ public class ChampionFrequency {
 				continue;
 			}
 			String matchID=((JsonObject) array.get(i)).get("gameId").getAsString();
-			Match m=new Match(matchID,summonerID,api_key);
+			Match m=new Match(matchID,accountID,api_key);
 			kdaWinLoseTime wlt=m.getGameStats();
 			double winBonus=0;
 			if(wlt.win) {
@@ -418,7 +417,6 @@ public class ChampionFrequency {
 					difference=difference+Math.pow((championFeature.get(i)-playerFeature.get(i)),2);
 				}
 			}
-			//System.out.println("champion: "+championName+"   difference: "+difference);
 			differenceMap.put(championName, difference);	
 		}
 		
@@ -443,13 +441,13 @@ public class ChampionFrequency {
 			if(testString.indexOf(nameChar)==-1) {
 				if(nameChar<'a'||nameChar>'z') {
 					if(nameChar<'A'||nameChar>'Z') {
-						//System.out.println("false");
-						return false;
+						if(nameChar<'0'||nameChar>'9') {
+							return false;
+						}
 					}
 				}
 			}
 		}
-		//System.out.println("true");
 		return true;
 	}
 	
