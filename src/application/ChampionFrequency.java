@@ -411,7 +411,7 @@ public class ChampionFrequency {
 			for(int i=0;i<10;i++) { //for each feature
 				if(i==3) { //if it is the difficulty feature
 					//if the player used to play hard champions, he can easily handle easier ones
-					difference=difference+(championFeature.get(i)-playerFeature.get(i));
+					difference=difference+2*(championFeature.get(i)-playerFeature.get(i));
 				}
 				else { //for other features
 					difference=difference+Math.pow((championFeature.get(i)-playerFeature.get(i)),2);
