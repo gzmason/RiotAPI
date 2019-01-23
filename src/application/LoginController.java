@@ -181,12 +181,7 @@ public class LoginController implements Initializable {
 						loginButton.setDisable(true);
 						nameTextField.setDisable(true);
 						
-						String imageSrc = "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif";
-						try {
-							loading.setImage(createImage(imageSrc));
-			            } catch (IOException e1) {
-			                e1.printStackTrace();
-			            }
+						loading.setImage(null);
 					}
 
 				});
