@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -77,7 +78,7 @@ public class LoginController implements Initializable {
 	private Exception exp;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		
 		recomTextField.setDisable(true);
 		newChamp.setDisable(true);
 	}
@@ -92,14 +93,7 @@ public class LoginController implements Initializable {
 				
 				
 				
-				new Thread(() -> {
-					String imageSrc = "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif";
-					try {
-						loading.setImage(createImage(imageSrc));
-		            } catch (IOException e1) {
-		                e1.printStackTrace();
-		            }
-				}).start();
+			
 				
 				backgroundThread = new Service<Void>() {
 
@@ -113,7 +107,8 @@ public class LoginController implements Initializable {
 								try {
 									String name = nameTextField.getText();
 									updateMessage("Logging in...");
-									
+									Image i = new Image(new File("src/LoadingBasketContents.gif").toURI().toString());
+							        loading.setImage(i);
 
 									ChampionFrequency.getChampName();
 									name = name.replaceAll("\\s", ""); // delete spaces
