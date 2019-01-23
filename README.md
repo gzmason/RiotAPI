@@ -40,5 +40,11 @@ The formula to pick a old champ is based on numerizing the
        
 And used the latest 98 games as the data input (Limited to the API constraint). Regretly there's no document nor enough data points to supports that this formula will give a good recommendation, it's solely based on the authors' subjectivity.   
 
+---
+
+### Some screenshot of the program
+![PIC](https://github.com/gzmason/RiotAPI/blob/master/Pics/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190123160716.png)
+![PIC](https://github.com/gzmason/RiotAPI/blob/master/Pics/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_201901231607161.png)
+![PIC](https://github.com/gzmason/RiotAPI/blob/master/Pics/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_201901231607162.png)
 
  [link]: <http://ddragon.leagueoflegends.com/cdn/6.24.1/data/en_US/champion.json>
