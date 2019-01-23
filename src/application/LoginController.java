@@ -1,4 +1,3 @@
-
 package application;
 
 import java.net.URL;
@@ -51,12 +50,16 @@ public class LoginController implements Initializable {
 
 	@FXML
 	private ImageView newchampIcon;
+	
+	@FXML
+	private ImageView loading;
 
 	@FXML
 	private Label oldLable;
 
 	@FXML
 	private Label newLable;
+	
 
 	private Service<Void> backgroundThread;
 
@@ -81,6 +84,7 @@ public class LoginController implements Initializable {
 
 		try {
 			if (nameTextField.getLength() != 0 && ChampionFrequency.checkName(nameTextField.getText())) {
+				
 				loginButton.setDisable(true);
 
 				backgroundThread = new Service<Void>() {
@@ -95,15 +99,20 @@ public class LoginController implements Initializable {
 								try {
 									String name = nameTextField.getText();
 									updateMessage("Logging in...");
+									loading.setImage(new Image(this.getClass().getResource("LoadingBasketContents.gif").toExternalForm()));								
 									ChampionFrequency.getChampName();
 									name = name.replaceAll("\\s", ""); // delete spaces
 									ChampionFrequency.SummonerIDbyName(name);
+									System.out.println("test1");
 									finalResult = ChampionFrequency.usedChampFinalRank();
+									System.out.println("test2");
 									newRecommendList = ChampionFrequency.recommendNew();
+									
 									for (Map.Entry<String, Double> entry : finalResult.entrySet()) {
 										String championName = entry.getKey();
 										oldRecommendList.add(championName);
 									}
+									System.out.println("test3");
 								}catch(ForbiddenException f) {
 									exp = f;
 									throw new Exception();
@@ -115,6 +124,10 @@ public class LoginController implements Initializable {
 									throw new Exception();
 								}catch(ServiceUnavailableException s) {
 									exp = s;
+									throw new Exception();
+								}
+								catch(Exception e) {
+									exp = e;
 									throw new Exception();
 								}
 
@@ -132,13 +145,17 @@ public class LoginController implements Initializable {
 					public void handle(WorkerStateEvent arg0) {
 						// TODO Auto-generated method stub
 						alert.setHeaderText(null);
-						String text = "";
-						switch(exp.getMessage()){
-						case "404" :text = "Error 404: ID does not exist, please check your summoner name";break;
-						case "500" :text = "Error 500: Internal server error,  please use it later.";break;
-						case "503" :text = "Error 503: Service unvaiable, please use it later.";break;
-						case "429" :text = "Error 429: API limit exceeded, please try again in two minutes.";break;	
+						String text = "Unknown Error";
+						if(exp != null) {
+							switch(exp.getMessage()){
+							case "404" :text = "Error 404: ID does not exist, please check your summoner name";break;
+							case "500" :text = "Error 500: Internal server error,  please use it later.";break;
+							case "503" :text = "Error 503: Service unvaiable, please use it later.";break;
+							case "429" :text = "Error 429: API limit exceeded, please try again in two minutes.";break;	
+							}
 						}
+							
+						
 						alert.setContentText(text);
 						alert.showAndWait();
 											

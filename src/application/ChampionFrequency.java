@@ -39,7 +39,7 @@ import com.google.gson.GsonBuilder;
 public class ChampionFrequency {
 
 
-	final static String api_key="RGAPI-1b953b1e-2292-4f6f-9bf8-95aaeb0905d4";
+	final static String api_key="RGAPI-c7663ff9-3431-4e8c-88b6-0f3ec75efdb4";
 
 	static String summonerID=null;
 	static String accountID=null;
