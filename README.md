@@ -1,6 +1,8 @@
 # RiotAPI Contest 2018
 #### Ken Wang @University of Utah & Mason Liu @University of California
-##### *Uses the NA server API
+##### *Uses the NA server API, API key will likely to be expired by the time you are using, please change the key at 
+    src/application/ChampionFrequency.java
+
 ---
 
 ### To Recommend New Champion:
