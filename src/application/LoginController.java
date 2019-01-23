@@ -1,6 +1,9 @@
 package application;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,7 +89,18 @@ public class LoginController implements Initializable {
 			if (nameTextField.getLength() != 0 && ChampionFrequency.checkName(nameTextField.getText())) {
 				
 				loginButton.setDisable(true);
-
+				
+				
+				
+				new Thread(() -> {
+					String imageSrc = "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif";
+					try {
+						loading.setImage(createImage(imageSrc));
+		            } catch (IOException e1) {
+		                e1.printStackTrace();
+		            }
+				}).start();
+				
 				backgroundThread = new Service<Void>() {
 
 					@Override
@@ -99,7 +113,8 @@ public class LoginController implements Initializable {
 								try {
 									String name = nameTextField.getText();
 									updateMessage("Logging in...");
-									loading.setImage(new Image(this.getClass().getResource("LoadingBasketContents.gif").toExternalForm()));								
+									
+
 									ChampionFrequency.getChampName();
 									name = name.replaceAll("\\s", ""); // delete spaces
 									ChampionFrequency.SummonerIDbyName(name);
@@ -182,11 +197,19 @@ public class LoginController implements Initializable {
 						loginButton.setText("Logged in");
 						loginButton.setDisable(true);
 						nameTextField.setDisable(true);
+						
+						String imageSrc = "https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif";
+						try {
+							loading.setImage(createImage(imageSrc));
+			            } catch (IOException e1) {
+			                e1.printStackTrace();
+			            }
 					}
 
 				});
 
 				loginButton.textProperty().bind(backgroundThread.messageProperty());
+
 			}
 			backgroundThread.restart();
 			
@@ -247,5 +270,14 @@ public class LoginController implements Initializable {
 			newchampIcon.setCache(true);
 		}
 	}
+	
+	  private Image createImage(String url) throws IOException {
+	        URLConnection conn = new URL(url).openConnection();
+	        conn.setRequestProperty("User-Agent", "Wget/1.13.4 (linux-gnu)");
+
+	        try (InputStream stream = conn.getInputStream()) {
+	            return new Image(stream);
+	        }
+	    }
 
 }
