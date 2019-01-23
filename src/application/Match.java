@@ -31,10 +31,10 @@ class kdaWinLoseTime{
 public class Match {
 	static String matchID;
 	static String api_key;
-	static String summonerID;
-	public Match(String matchID,String summonerID,String api) {
+	static String accountID;
+	public Match(String matchID,String accountID,String api) {
 		api_key=api;
-		this.summonerID=summonerID;
+		this.accountID=accountID;
 		this.matchID=matchID;
 	}
 	public kdaWinLoseTime getGameStats() throws ForbiddenException,ServiceUnavailableException, RateLimitException, InternalServerException, JsonIOException, JsonSyntaxException, IOException{
@@ -65,19 +65,21 @@ public class Match {
 		}else if(response==404) {
 			throw new ForbiddenException("404");
 		}
-		
 		// Convert to a JSON object to print data
 		JsonParser jp = new JsonParser(); //from gson
 		JsonElement root = null;
 		try {
 			root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
 		} catch (JsonIOException e) {
+			System.out.println("JsonIOException");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonSyntaxException e) {
+			System.out.println("SyntaxException");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			System.out.println("IOException");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
@@ -87,8 +89,9 @@ public class Match {
 		JsonArray participantList=rootobj.get("participantIdentities").getAsJsonArray();
 		String participantID="-1";
 		for(int i=0;i<participantList.size();i++) {
-			if(((JsonObject) participantList.get(i)).get("player").getAsJsonObject().get("summonerId").getAsString().equals(summonerID)) {
+			if(((JsonObject) participantList.get(i)).get("player").getAsJsonObject().get("accountId").getAsString().equals(accountID)) {
 				participantID=((JsonObject) participantList.get(i)).get("participantId").getAsString();
+				break;
 			}
 		}
 		

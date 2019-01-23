@@ -39,7 +39,11 @@ import com.google.gson.GsonBuilder;
 public class ChampionFrequency {
 
 
+<<<<<<< HEAD
 	final static String api_key="RGAPI-c7663ff9-3431-4e8c-88b6-0f3ec75efdb4";
+=======
+	final static String api_key="RGAPI-4bf85da7-f1ee-4755-8b25-b4ae86362f3f";
+>>>>>>> 473ded71f3c267800a2ee7e1171ac263a77e3f21
 
 	static String summonerID=null;
 	static String accountID=null;
@@ -252,7 +256,6 @@ public class ChampionFrequency {
 			// TODO Auto-generated catch block
 			//System.out.println("IOException "+e1.getMessage());
 		//}
-		
 		int response=request.getResponseCode();
 		if(response==429) {
 			throw new RateLimitException("429");
@@ -293,7 +296,7 @@ public class ChampionFrequency {
 				continue;
 			}
 			String matchID=((JsonObject) array.get(i)).get("gameId").getAsString();
-			Match m=new Match(matchID,summonerID,api_key);
+			Match m=new Match(matchID,accountID,api_key);
 			kdaWinLoseTime wlt=m.getGameStats();
 			double winBonus=0;
 			if(wlt.win) {
@@ -412,13 +415,12 @@ public class ChampionFrequency {
 			for(int i=0;i<10;i++) { //for each feature
 				if(i==3) { //if it is the difficulty feature
 					//if the player used to play hard champions, he can easily handle easier ones
-					difference=difference+(championFeature.get(i)-playerFeature.get(i));
+					difference=difference+2*(championFeature.get(i)-playerFeature.get(i));
 				}
 				else { //for other features
 					difference=difference+Math.pow((championFeature.get(i)-playerFeature.get(i)),2);
 				}
 			}
-			//System.out.println("champion: "+championName+"   difference: "+difference);
 			differenceMap.put(championName, difference);	
 		}
 		
@@ -443,13 +445,13 @@ public class ChampionFrequency {
 			if(testString.indexOf(nameChar)==-1) {
 				if(nameChar<'a'||nameChar>'z') {
 					if(nameChar<'A'||nameChar>'Z') {
-						//System.out.println("false");
-						return false;
+						if(nameChar<'0'||nameChar>'9') {
+							return false;
+						}
 					}
 				}
 			}
 		}
-		//System.out.println("true");
 		return true;
 	}
 	
