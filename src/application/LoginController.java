@@ -64,7 +64,6 @@ public class LoginController implements Initializable {
 	@FXML
 	private Label newLable;
 	
-
 	private Service<Void> backgroundThread;
 
 	private Alert alert = new Alert(AlertType.INFORMATION);
@@ -89,17 +88,11 @@ public class LoginController implements Initializable {
 		try {
 			if (nameTextField.getLength() != 0 && ChampionFrequency.checkName(nameTextField.getText())) {
 				
-				loginButton.setDisable(true);
-				
-				
-				
-			
-				
+				loginButton.setDisable(true);												
 				backgroundThread = new Service<Void>() {
 
 					@Override
 					protected Task<Void> createTask() {
-						// TODO Auto-generated method stub
 						return new Task<Void>() {
 							//Background thread of accessing APIs
 							@Override
@@ -109,20 +102,16 @@ public class LoginController implements Initializable {
 									updateMessage("Logging in...");
 									Image i = new Image(new File("src/LoadingBasketContents.gif").toURI().toString());
 							        loading.setImage(i);
-
 									ChampionFrequency.getChampName();
 									name = name.replaceAll("\\s", ""); // delete spaces
 									ChampionFrequency.SummonerIDbyName(name);
-									System.out.println("test1");
 									finalResult = ChampionFrequency.usedChampFinalRank();
-									System.out.println("test2");
 									newRecommendList = ChampionFrequency.recommendNew();
 									
 									for (Map.Entry<String, Double> entry : finalResult.entrySet()) {
 										String championName = entry.getKey();
 										oldRecommendList.add(championName);
 									}
-									System.out.println("test3");
 								}catch(ForbiddenException f) {
 									exp = f;
 									throw new Exception();
@@ -153,7 +142,6 @@ public class LoginController implements Initializable {
 
 					@Override
 					public void handle(WorkerStateEvent arg0) {
-						// TODO Auto-generated method stub
 						alert.setHeaderText(null);
 						String text = "Unknown Error";
 						if(exp != null) {
@@ -265,14 +253,4 @@ public class LoginController implements Initializable {
 			newchampIcon.setCache(true);
 		}
 	}
-	
-	  private Image createImage(String url) throws IOException {
-	        URLConnection conn = new URL(url).openConnection();
-	        conn.setRequestProperty("User-Agent", "Wget/1.13.4 (linux-gnu)");
-
-	        try (InputStream stream = conn.getInputStream()) {
-	            return new Image(stream);
-	        }
-	    }
-
 }
